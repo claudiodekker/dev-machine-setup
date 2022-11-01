@@ -1,0 +1,11 @@
+---
+- name: Set the Terminal default Color Scheme
+  osx_defaults:
+    domain: com.apple.Terminal
+    key: "{{ item }}"
+    type: string
+    value: "{{ (terminal|default({})).theme|default('Basic') }}"
+    state: present
+  with_items: 
+    - "Default Window Settings"
+    - "Startup Window Settings"

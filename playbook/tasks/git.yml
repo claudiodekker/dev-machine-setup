@@ -1,0 +1,56 @@
+---
+- name: Configure our git user
+  git_config:
+    name="{{ item.name }}"
+    scope=global
+    value="{{ item.value }}"
+  with_items:
+    - { name: "user.name", value: "{{ git.fullName|default('User') }}" }
+    - { name: "user.email", value: "{{ git.email|default('noreply@example.com') }}" }
+    - { name: "ui.color", value: "true" }
+  when: git|default(false)
+
+- name: Configure global default branch (new repositories)
+  git_config:
+    name="init.defaultBranch"
+    scope=global
+    value="{{ git.defaultBranch|default('master') }}"
+
+- name: Ensure our global .gitignore exists and is up-to-date
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.global-gitignore"
+    line: '{{ item }}'
+    state: present
+    create: yes
+  with_items: "{{ gitignore|default({}) }}"
+  register: global_gitignore
+
+- name: Ensure our global gitignore file is enabled
+  git_config:
+    name="core.excludesfile"
+    scope=global
+    value="{{ ansible_env.HOME }}/.global-gitignore"
+  when: global_gitignore is changed
+
+- name: Enable GPG signing
+  git_config:
+    name="commit.gpgsign"
+    scope=global
+    value="true"
+  when: git.signingKey|default(false)
+  register: git_gpg_signing
+
+- name: Set git GPG signing key
+  git_config:
+    name="git.signingkey"
+    scope=global
+    value="{{ git.signingKey }}"
+  when: git.signingKey|default(false)
+  register: git_signing_key
+
+- name: Set git GPG program
+  git_config:
+    name="gpg.program"
+    scope=global
+    value="/opt/homebrew/bin/gpg"
+  when: git_signing_key is changed

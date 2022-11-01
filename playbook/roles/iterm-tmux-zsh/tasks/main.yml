@@ -1,0 +1,9 @@
+---
+- name: Install Oh-my-ZSH
+  import_tasks: oh-my-zsh.yml
+
+- name: Install tmux
+  import_tasks: tmux.yml
+
+- name: Install iTerm
+  import_tasks: iterm.yml

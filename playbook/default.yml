@@ -1,0 +1,113 @@
+---
+- hosts: localhost
+  handlers:
+    - name: Restart macOS Finder
+      command: killall Finder
+      listen: "restart finder"
+    - name: Restart macOS Dock
+      command: killall Dock
+      listen: "restart dock"
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+  vars:
+    yubikey:
+      gpgKey: "08FDB44B6D6320215D1EE8C13025FFE233CCC24B"
+      gpg: true
+      ssh: true
+
+    git:
+      fullName: "Claudio Dekker"
+      email: "claudio@ubient.net"
+      signingKey: "{{ yubikey.gpgKey }}"
+
+    # Applications that have an ID are AppStore apps, the names are just for display/identification.
+    # Applications that don't have an ID are Homebrew Casks. In this case, the names are the to-be-installed formulas.
+    applications:
+#      - { id: 1091189122, name: Bear }
+#      - { id: 1278508951, name: Trello }
+#      - { id: 1290358394, name: Cardhop }
+#      - { id: 411643860, name: DaisyDisk }
+#      - { id: 975937182, name: Fantastical 2 }
+#      - { id: 775737590, name: iA Writer }
+#      - { id: 880001334, name: Reeder }
+#      - { id: 803453959, name: Slack }
+#      - { id: 507257563, name: Sip }
+#      - { id: 1176895641, name: Spark }
+      - { id: 747648890, name: Telegram }
+      - { id: 425424353, name: The Unarchiver }
+      - { id: 1497506650, name: Yubico Authenticator }
+#      - { id: 1191449274, name: ToothFairy }
+#      - { id: 1063996724, name: Tyme 2 }
+#      - { id: 1384080005, name: Tweetbot }
+#      - { name: dash }
+      - { name: 1password }
+      - { name: discord }
+      - { name: docker }
+      - { name: fork }
+      - { name: firefox }
+      - { name: helo }
+#      - { name: paw }
+      - { name: obsidian }
+      - { name: phpstorm }
+#      - { name: rectangle }
+      - { name: sublime-text }
+      - { name: tableplus }
+      - { name: tinkerwell }
+#      - { name: transmit }
+      - { name: vlc }
+
+    utilities:
+      - { name: bat }
+#      - { name: fzf }
+      - { name: httpie }
+#      - { name: ncdu }
+#      - { name: peco }
+      - { name: yarn }
+      - { name: yt-dlp }
+      - { name: z }
+
+    macOS:
+      autocorrect: false
+      smartQuotes: false
+      showAllFiles: true
+      dockRecentApps: false
+
+    nodejs: 18.12.0
+
+    php:
+      version: 8.1
+      composer_packages:
+        - "laravel/valet ^3.1"
+        - "laravel/pint ^1.2.0"
+        - "laravel/installer ^4.2"
+        - "phpmd/phpmd ^2.10"
+        - "tightenco/takeout ^2.1.1"
+
+    terminal:
+      theme: Pro
+
+    gitignore:
+      - .DS_Store
+      - .idea/
+
+  roles:
+    - yubikey
+    - iterm-tmux-zsh
+#    - sublime-text
+
+  tasks:
+  - include: tasks/applications.yml
+    tags: applications
+  - include: tasks/git.yml
+    tags: git
+  - include: tasks/macOS.yml
+    tags: macOS
+  - include: tasks/nodejs.yml
+    tags: nodejs
+  - include: tasks/php.yml
+    tags: php
+  - include: tasks/terminal.yml
+    tags: terminal
+  - include: tasks/utilities.yml
+    tags: utilities

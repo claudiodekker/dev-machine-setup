@@ -1,0 +1,16 @@
+// SublimeLinter Settings - User
+{
+	"linters": {
+		"phpcs": {
+	        "disable": false,
+	        "args": "--standard=PSR2 --ignore=*/tests/*",
+	        "excludes": "*.blade.php"
+	    },
+	    "phpmd": {
+	    	"disable": false,
+	    	"excludes": ["*.blade.php", "*/tests/*"],
+	    	"rulesets": "codesize,controversial,design,naming,unusedcode"
+	    }
+	},
+    "kill_old_processes": true,
+}

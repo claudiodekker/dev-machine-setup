@@ -1,0 +1,41 @@
+---
+- name: Install PHP
+  homebrew:
+    name: 'shivammathur/php/php@{{ (php|default({})).version|default(8.1) }}'
+    state: latest
+  register: php_installed
+
+- name: Install Composer
+  homebrew:
+    name: 'composer'
+    state: latest
+  register: composer_installed
+  when: php_installed is changed
+
+- name: Add composer global binaries to our path
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    create: yes
+    line: 'export PATH="$HOME/.composer/vendor/bin:$PATH"'
+    state: present
+  when: composer_installed is changed
+
+- name: Install Global Composer Packages
+  composer:
+    command: require
+    global_command: yes
+    arguments: '{{ item }} -W'
+  with_items: "{{ (php|default({})).composer_packages|default([]) }}"
+  register: composer_packages
+
+- name: Ensure Valet is configured
+  expect:
+    command: bash -c "valet install"
+    responses:
+      "Password:": "{{ ansible_become_password }}"
+  register: valet_install
+  environment:
+    PATH: "{{ ansible_env.PATH }}:~/.composer/vendor/bin"
+  when:
+    - composer_packages is changed
+    - (php|default({})).composer_packages|join(" ") is search('laravel/valet')

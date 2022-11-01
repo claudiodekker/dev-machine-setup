@@ -1,0 +1,32 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"ayu",
+		"DiffView",
+		"DocBlockr",
+		"Dockerfile Syntax Highlighting",
+		"FileManager",
+		"Git blame",
+		"GitGutter",
+		"Jinja2",
+		"Laravel Blade Highlighter",
+		"LESS",
+		"Origami",
+		"Package Control",
+		"PHP Companion",
+		"PHP CS Fixer",
+		"PHP Getters and Setters",
+		"PHPUnitKit",
+		"Rainglow",
+		"SublimeLinter",
+		"SublimeLinter-phpcs",
+		"SublimeLinter-phpmd",
+		"Theme - Soda",
+		"TypeScript Syntax",
+		"Vue Syntax Highlight"
+	]
+}

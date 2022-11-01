@@ -1,0 +1,16 @@
+{
+    "extensions_to_blacklist": ["blade.php"],
+
+    "phpcs_execute_on_save": false,
+    "phpcs_show_errors_on_save": false,
+    "phpcs_show_gutter_marks": false,
+    "phpcs_outline_for_errors": false,
+    "phpcs_show_errors_in_status": false,
+    "phpcs_show_quick_panel": false,
+
+    "phpcs_sniffer_run": false,
+    "phpcs_command_on_save": false,
+
+    "php_cs_fixer_on_save": true,
+    "php_cs_fixer_executable_path": "$HOME/.composer/vendor/bin/php-cs-fixer"
+}

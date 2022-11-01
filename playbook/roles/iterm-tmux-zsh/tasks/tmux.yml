@@ -1,0 +1,19 @@
+---
+- name: Install tmux
+  homebrew:
+    name: 'tmux'
+    state: present
+  register: tmux_installation
+
+- name: Ensure our tmux configuration is present
+  copy:
+    src: .tmux.conf
+    dest: "{{ ansible_env.HOME }}/.tmux.conf"
+  register: tmux_configuration
+  when: tmux_installation is changed
+
+- name: Install 'reattach-to-user-namespace'
+  homebrew:
+    name: 'reattach-to-user-namespace'
+    state: present
+  when: tmux_configuration is changed

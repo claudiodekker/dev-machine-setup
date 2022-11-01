@@ -1,0 +1,10 @@
+---
+- name: Install Sublime Text
+  homebrew_cask:
+    name: 'sublime-text'
+    state: latest
+  register: sublime_installed
+
+- name: Configure Sublime Text
+  import_tasks: configure.yml
+  when: sublime_installed is changed

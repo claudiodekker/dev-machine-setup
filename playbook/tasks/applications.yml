@@ -1,0 +1,43 @@
+---
+- name: Ensure 'mas' is installed (Mac App Store CLI tool)
+  homebrew:
+    name: 'mas'
+    state: latest
+
+- name: Check for out-of-date applications (Mac App Store)
+  command: mas outdated
+  register: mas_update_available
+  changed_when: false
+
+- name: Upgrade all outdated macOS Applications (Mac App Store)
+  command: mas upgrade
+  when: mas_update_available.stdout_lines|length > 1
+
+- name: Install macOS Applications (Mac App Store)
+  command: mas install "{{ item.id }}"
+  register: install_macos_applications
+  changed_when: install_macos_applications.stdout.find(' is already installed') == -1
+  with_items: "{{ applications|default([]) }}"
+  when: (item.id is defined) and (item.name is defined) and not item.removed|default(false)
+
+# - name: Uninstall macOS Applications (Mac App Store)
+#   command: mas uninstall "{{ item.id }}"
+#   become: true
+#   register: uninstall_macos_applications
+#   failed_when: (uninstall_macos_applications.stderr_lines is defined) and uninstall_macos_applications.stderr_lines|length > 0
+#   changed_when: (uninstall_macos_applications.stdout is defined) and uninstall_macos_applications.stdout.find('Not installed') == -1
+#   with_items: "{{ applications|default([]) }}"
+#   when: (item.id is defined) and (item.name is defined) and item.removed|default(false)
+
+# - name: Remove uninstalled macOS Applications (Mac App Store) from Trash
+#   debug:
+#     msg: "{{ item.stdout_lines[0] | replace('App moved to trash: ', '') }}"
+#   with_items: uninstall_macos_applications
+#   when: (uninstall_macos_applications is changed) and (item.stdout_lines.stdout_lines is defined) and item.stdout_lines[0].find('App moved to trash:') > -1
+
+- name: Ensure macOS Applications (Homebrew)
+  homebrew_cask:
+    name: '{{ item.name }}'
+    state: '{{ "absent" if item.removed|default(false) else "latest" }}'
+  with_items: "{{ applications|default([]) }}"
+  when: (item.id is not defined) and (item.name is defined) and item.cask|default(true)

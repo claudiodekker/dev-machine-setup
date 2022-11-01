@@ -1,0 +1,44 @@
+---
+- name: Toggle macOS Autocorrect
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticSpellingCorrectionEnabled
+    type: boolean
+    value: "{{ (macOS|default({})).autocorrect|default(true) }}"
+    state: present
+
+- name: Toggle macOS "Smart Quotes"
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: "{{ item }}"
+    type: boolean
+    value: "{{ (macOS|default({})).smartQuotes|default(true) }}"
+    state: present
+  with_items:
+    - "NSAutomaticQuoteSubstitutionEnabled"
+    - "NSAutomaticDashSubstitutionEnabled" # Automatically toggled by macOS as well when disabling smart quotes.
+
+- name: Show all Files in Finder
+  osx_defaults:
+    domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: boolean
+    value: "{{ (macOS|default({})).showAllFiles|default(false) }}"
+    state: present
+  notify:
+    - restart finder
+
+- name: Toggle Recent Apps (Dock)
+  osx_defaults:
+    domain: com.apple.dock
+    key: show-recents
+    type: boolean
+    value: "{{ (macOS|default({})).dockRecentApps|default(true) }}"
+    state: present
+  register: show_recents_toggled
+
+- name: Housekeeping for Recent Apps (Dock)
+  command: "defaults write com.apple.dock recent-apps {}"
+  when: show_recents_toggled is changed
+  notify:
+    - restart dock

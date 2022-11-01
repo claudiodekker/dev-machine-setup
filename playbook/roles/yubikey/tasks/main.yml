@@ -1,0 +1,66 @@
+---
+- name: Install Yubikey Packages
+  homebrew:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - yubikey-personalization
+    - ykman
+
+- name: Install Yubikey GPG Support Packages
+  homebrew:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - gnupg
+    - hopenpgp-tools
+    - pinentry-mac
+  when: (yubikey|default({})).gpgKey|default(false)
+  register: gpg_suite
+
+- name: Receive GPG Public Key from Keyserver
+  command: gpg --keyserver keys.openpgp.org --recv "{{ yubikey.gpgKey }}"
+  when: gpg_suite is changed
+
+- name: '[SSH] Create GPG Agent Configuration'
+  copy:
+    src: gpg-agent.conf
+    dest: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
+  when: (yubikey|default({})).ssh|default(false)
+  register: create_gpg_agent
+
+- name: '[SSH] Create GPG-Agent LaunchAgent entry'
+  copy:
+    src: gnupg.gpg-agent.plist
+    dest: "{{ ansible_env.HOME }}/Library/LaunchAgents/"
+  when: create_gpg_agent is changed
+  register: gpg_agent_launchd
+
+- name: '[SSH] Load GPG-Agent LaunchAgent'
+  command: launchctl load "{{ ansible_env.HOME }}/Library/LaunchAgents/gnupg.gpg-agent.plist"
+  when: gpg_agent_launchd is changed
+  register: gpg_agent_launchd_load
+  failed_when: "gpg_agent_launchd_load.stderr.find('Load failed') != -1"
+
+- name: '[SSH] Create GPG-Agent SSH Socket Symlink LaunchAgent entry'
+  copy:
+    src: gnupg.gpg-agent-symlink.plist
+    dest: "{{ ansible_env.HOME }}/Library/LaunchAgents/"
+  when: create_gpg_agent is changed
+  register: gpg_agent_symlink_launchd
+
+- name: '[SSH] Load GPG-Agent SSH Socket Symlink LaunchAgent'
+  command: launchctl load "{{ ansible_env.HOME }}/Library/LaunchAgents/gnupg.gpg-agent-symlink.plist"
+  when: gpg_agent_symlink_launchd is changed
+  register: gpg_agent_symlink_launchd_load
+  failed_when: "gpg_agent_symlink_launchd_load.stderr.find('Load failed') != -1"
+
+- name: Configure agent in .zshrc
+  blockinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    create: yes
+    state: present
+    block: |
+      export GPG_TTY="$(tty)"
+      export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+      gpgconf --launch gpg-agent

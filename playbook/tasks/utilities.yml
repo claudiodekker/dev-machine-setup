@@ -1,0 +1,14 @@
+---
+- name: Ensure all repositories are tapped (Homebrew)
+  homebrew_tap:
+    name: '{{ item.tap }}'
+    state: '{{ "absent" if item.removed|default(false) else "present" }}'
+  with_items: "{{ utilities|default([]) }}"
+  when: item.tap is defined
+
+- name: Ensure macOS Utilities (Homebrew)
+  homebrew:
+    name: '{{ item.name }}'
+    state: '{{ "absent" if item.removed|default(false) else "latest" }}'
+  with_items: "{{ utilities|default([]) }}"
+  when: item.name is defined

@@ -1,0 +1,3 @@
+{
+	"shell_cmd": "php-cs-fixer fix $file --rules=@PSR2 --using-cache=no"
+}

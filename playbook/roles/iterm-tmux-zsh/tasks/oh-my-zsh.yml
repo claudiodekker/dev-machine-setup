@@ -1,0 +1,16 @@
+---
+- name: Clone the oh-my-zsh repository
+  git: repo=https://github.com/robbyrussell/oh-my-zsh.git dest="{{ ansible_env.HOME }}/.oh-my-zsh"
+  register: oh_my_zsh_installation
+
+- name: Deploy our .zshrc file
+  copy:
+    src: .zshrc
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+  when: oh_my_zsh_installation is changed
+
+- name: Copy TayBalt ZSH theme
+  copy:
+    src: .oh-my-zsh/themes/taybalt.zsh-theme
+    dest: "{{ ansible_env.HOME }}/.oh-my-zsh/themes/taybalt.zsh-theme"
+  when: oh_my_zsh_installation is changed

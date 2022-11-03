@@ -66,6 +66,7 @@
       - { name: yarn }
       - { name: yt-dlp }
       - { name: z }
+      - { name: zx }
 
     macOS:
       autocorrect: false

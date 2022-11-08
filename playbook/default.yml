@@ -71,6 +71,7 @@
     macOS:
       autocorrect: false
       clearBottomRightHotCorner: true
+      disableSearchManPageIndexInTerminalShortcut: true
       dockRecentApps: false
       showAllFiles: true
       smartQuotes: false

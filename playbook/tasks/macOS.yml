@@ -52,3 +52,16 @@
   when: (show_recents_toggled is changed) or (hot_corners_clear_bottom_right is changed)
   notify:
     - restart dock
+
+- name: Determine status of macOS CMD+Shift+A "Search man Page Index in Terminal" built-in
+  command: "plutil -extract NSServicesStatus json -o - {{ ansible_env.HOME }}/Library/Preferences/pbs.plist"
+  register: command_shift_a_builtin
+  changed_when: false
+
+- name: Disable macOS CMD+Shift+A "Search man Page Index in Terminal" built-in
+  command: "plutil -replace NSServicesStatus -json \"{ \\\"com.apple.Terminal - Search man Page Index in Terminal - searchManPages\\\": { \\\"enabled_context_menu\\\": 0, \\\"enabled_services_menu\\\": 0, \\\"presentation_modes\\\": { \\\"ContextMenu\\\": 0, \\\"ServicesMenu\\\": 0 } } }\" {{ ansible_env.HOME }}/Library/Preferences/pbs.plist"
+  when: ("searchManPages" not in command_shift_a_builtin.stdout) and (macOS|default({})).disableSearchManPageIndexInTerminalShortcut|default(false)
+
+- name: Re-enable macOS CMD+Shift+A "Search man Page Index in Terminal" built-in
+  command: "plutil -replace NSServicesStatus -json \"{ }\" {{ ansible_env.HOME }}/Library/Preferences/pbs.plist"
+  when: ("searchManPages" in command_shift_a_builtin.stdout) and ((macOS|default({})).disableSearchManPageIndexInTerminalShortcut is defined) and not macOS.disableSearchManPageIndexInTerminalShortcut

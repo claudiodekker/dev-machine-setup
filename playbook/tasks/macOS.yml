@@ -37,8 +37,18 @@
     state: present
   register: show_recents_toggled
 
+- name: Clear bottom-right "Hot Corner"
+  osx_defaults:
+    domain: com.apple.dock
+    key: wvous-br-corner
+    type: integer
+    value: 1
+    state: present
+  register: hot_corners_clear_bottom_right
+  when: (macOS|default({})).clearBottomRightHotCorner|default(false)
+
 - name: Housekeeping for Recent Apps (Dock)
   command: "defaults write com.apple.dock recent-apps {}"
-  when: show_recents_toggled is changed
+  when: (show_recents_toggled is changed) or (hot_corners_clear_bottom_right is changed)
   notify:
     - restart dock

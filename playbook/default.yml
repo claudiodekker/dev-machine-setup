@@ -70,9 +70,10 @@
 
     macOS:
       autocorrect: false
-      smartQuotes: false
-      showAllFiles: true
+      clearBottomRightHotCorner: true
       dockRecentApps: false
+      showAllFiles: true
+      smartQuotes: false
 
     nodejs: 18.12.0
 

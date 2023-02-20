@@ -31,7 +31,7 @@
 #      - { id: 975937182, name: Fantastical 2 }
 #      - { id: 775737590, name: iA Writer }
 #      - { id: 880001334, name: Reeder }
-#      - { id: 803453959, name: Slack }
+      - { id: 803453959, name: Slack }
 #      - { id: 507257563, name: Sip }
 #      - { id: 1176895641, name: Spark }
       - { id: 747648890, name: Telegram }
@@ -46,10 +46,14 @@
       - { name: docker }
       - { name: fork }
       - { name: firefox }
+      - { name: height }
       - { name: helo }
 #      - { name: paw }
       - { name: obsidian }
+      - { name: outline }
       - { name: phpstorm }
+      - { name: protonmail-bridge }
+      - { name: protonvpn }
 #      - { name: rectangle }
       - { name: sublime-text }
       - { name: tableplus }
@@ -81,11 +85,10 @@
     php:
       version: 8.2
       composer_packages:
-        - "laravel/valet ^3.1"
-        - "laravel/pint ^1.2.0"
-        - "laravel/installer ^4.2"
-        - "phpmd/phpmd ^2.10"
-        - "tightenco/takeout ^2.1.1"
+        - "laravel/valet ^3.3"
+        - "laravel/pint ^1.5"
+        - "laravel/installer ^4.4"
+        - "tightenco/takeout ^2.3"
 
     terminal:
       theme: Pro

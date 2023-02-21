@@ -5,6 +5,13 @@
     state: latest
   register: php_installed
 
+- name: Install PHP Extensions
+  homebrew:
+    name: "shivammathur/extensions/{{ item }}@{{ (php|default({})).version|default(8.1) }}"
+    state: latest
+  with_items: "{{ (php|default({})).extensions|default([]) }}"
+  register: php_extensions
+
 - name: Install Composer
   homebrew:
     name: 'composer'
@@ -38,4 +45,15 @@
     PATH: "{{ ansible_env.PATH }}:~/.composer/vendor/bin"
   when:
     - composer_packages is changed
+    - (php|default({})).composer_packages|join(" ") is search('laravel/valet')
+
+- name: Restart Valet
+  expect:
+    command: bash -c "valet install"
+    responses:
+      "Password:": "{{ ansible_become_password }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:~/.composer/vendor/bin"
+  when:
+    - php_extensions is changed
     - (php|default({})).composer_packages|join(" ") is search('laravel/valet')

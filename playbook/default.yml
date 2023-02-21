@@ -84,6 +84,8 @@
 
     php:
       version: 8.2
+      extensions:
+       - redis
       composer_packages:
         - "laravel/valet ^3.3"
         - "laravel/pint ^1.5"

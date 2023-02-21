@@ -1,8 +1,9 @@
 #!/bin/bash
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd)
 
-if [ -z "${ansible_become_password}" ] && [ -z "$1" ]; then
-	echo "Please provide your sudo-password as the first argument, or set it prior to running the command (e.g: 'ansible_become_password=foo ./run-playbook.sh').";
+if [ -z "${ansible_become_password}" ]; then
+	echo "Please provide your sudo-password as an environment variable. For example:"
+	echo "$ ansible_become_password=foo ./run-playbook.sh";
 	exit 1
 fi
 
@@ -20,4 +21,4 @@ if ! [ -x "$(command -v ansible-playbook)" ]; then
 fi
 
 # Actually run the playbook
-ansible-playbook playbook/default.yml -i playbook/hosts.yml -e "ansible_become_password=${ansible_become_password:-${1}}"
+ansible-playbook playbook/default.yml -i playbook/hosts.yml -e "ansible_become_password=${ansible_become_password}" $@

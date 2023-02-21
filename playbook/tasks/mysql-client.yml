@@ -1,0 +1,13 @@
+---
+- name: Ensure the MySQL Client is installed
+  homebrew:
+    name: 'mysql-client'
+    state: latest
+  register: mysql_client
+
+- name: Ensure the MySQL Client is part of our path
+  ansible.builtin.lineinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    line: 'export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"'
+    state: present
+  when: mysql_client is changed

@@ -109,6 +109,8 @@
     tags: git
   - include: tasks/macOS.yml
     tags: macOS
+  - include: tasks/mysql-client.yml
+    tags: mysql-client
   - include: tasks/nodejs.yml
     tags: nodejs
   - include: tasks/php.yml

@@ -10,4 +10,3 @@
     dest: "{{ ansible_env.HOME }}/.zshrc"
     line: 'export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"'
     state: present
-  when: mysql_client is changed

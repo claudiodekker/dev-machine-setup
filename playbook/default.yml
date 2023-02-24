@@ -50,7 +50,6 @@
       - { name: helo }
 #      - { name: paw }
       - { name: obsidian }
-      - { name: outline }
       - { name: phpstorm }
       - { name: protonmail-bridge }
       - { name: protonvpn }

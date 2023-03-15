@@ -40,6 +40,7 @@
     command: bash -c "valet install"
     responses:
       "Password:": "{{ ansible_become_password }}"
+    timeout: 120
   register: valet_install
   environment:
     PATH: "{{ ansible_env.PATH }}:~/.composer/vendor/bin"

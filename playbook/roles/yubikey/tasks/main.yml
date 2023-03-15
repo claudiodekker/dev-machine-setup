@@ -6,6 +6,7 @@
   with_items:
     - yubikey-personalization
     - ykman
+  register: yubikey_packages
 
 - name: Install Yubikey GPG Support Packages
   homebrew:
@@ -15,7 +16,7 @@
     - gnupg
     - hopenpgp-tools
     - pinentry-mac
-  when: (yubikey|default({})).gpgKey|default(false)
+  when: (yubikey|default({})).gpgKey|default(false) and yubikey_packages is changed
   register: gpg_suite
 
 - name: Receive GPG Public Key from Keyserver
@@ -26,7 +27,7 @@
   copy:
     src: gpg-agent.conf
     dest: "{{ ansible_env.HOME }}/.gnupg/gpg-agent.conf"
-  when: (yubikey|default({})).ssh|default(false)
+  when: (yubikey|default({})).ssh|default(false) and gpg_suite is changed
   register: create_gpg_agent
 
 - name: '[SSH] Create GPG-Agent LaunchAgent entry'

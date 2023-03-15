@@ -86,7 +86,7 @@
       extensions:
        - redis
       composer_packages:
-        - "laravel/valet ^3.3"
+        - "laravel/valet ^4.0"
         - "laravel/pint ^1.5"
         - "laravel/installer ^4.4"
         - "tightenco/takeout ^2.3"

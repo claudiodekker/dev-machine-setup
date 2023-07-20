@@ -81,15 +81,9 @@
 
     nodejs: 18.12.0
 
-    php:
-      version: 8.2
-      extensions:
-       - redis
-      composer_packages:
-        - "laravel/valet ^4.0"
-        - "laravel/pint ^1.5"
-        - "laravel/installer ^4.4"
-        - "tightenco/takeout ^2.3"
+    composer:
+      - "laravel/pint ^1.5"
+      - "tightenco/takeout ^2.3"
 
     terminal:
       theme: Pro

@@ -1,60 +1,45 @@
 ---
-- name: Install PHP
-  homebrew:
-    name: 'shivammathur/php/php@{{ (php|default({})).version|default(8.1) }}'
+- name: Install Laravel Herd
+  homebrew_cask:
+    name: 'herd'
     state: latest
-  register: php_installed
 
-- name: Install PHP Extensions
+- name: Get list of non-Herd PHP versions and extensions
+  shell: "brew list --full-name | grep 'shivammathur'"
+  register: brew_list_output
+  changed_when: false
+  failed_when: false
+
+- name: Uninstall PHP versions and extensions
   homebrew:
-    name: "shivammathur/extensions/{{ item }}@{{ (php|default({})).version|default(8.1) }}"
-    state: latest
-  with_items: "{{ (php|default({})).extensions|default([]) }}"
-  register: php_extensions
+    name: "{{ item }}"
+    state: absent
+  with_items: "{{ brew_list_output.stdout_lines }}"
+  register: non_herd_php_uninstalled
 
-- name: Install Composer
+- name: Uninstall non-Herd Composer
   homebrew:
     name: 'composer'
-    state: latest
-  register: composer_installed
-  when: php_installed is changed
+    state: absent
+  register: composer_uninstalled
+  when: non_herd_php_uninstalled is changed
 
-- name: Add composer global binaries to our path
-  lineinfile:
-    dest: "{{ ansible_env.HOME }}/.zshrc"
-    create: yes
-    line: 'export PATH="$HOME/.composer/vendor/bin:$PATH"'
-    state: present
-  when: composer_installed is changed
+- name: Uninstall global composer packages already bundled with Herd
+  ansible.builtin.command: composer global remove '{{ item }}'
+  with_items:
+    - laravel/valet
+    - laravel/installer
+  when: composer_uninstalled is changed
 
 - name: Install Global Composer Packages
-  composer:
-    command: require
-    global_command: yes
-    arguments: '{{ item }} -W'
-  with_items: "{{ (php|default({})).composer_packages|default([]) }}"
+  ansible.builtin.command: composer global require '{{ item }}' -W
+  with_items: "{{ composer|default([]) }}"
   register: composer_packages
+  changed_when: "'Nothing to install, update or remove' not in composer_packages.stderr"
 
-- name: Ensure Valet is configured
-  expect:
-    command: bash -c "valet install"
-    responses:
-      "Password:": "{{ ansible_become_password }}"
-    timeout: 120
-  register: valet_install
-  environment:
-    PATH: "{{ ansible_env.PATH }}:~/.composer/vendor/bin"
-  when:
-    - composer_packages is changed
-    - (php|default({})).composer_packages|join(" ") is search('laravel/valet')
-
-- name: Restart Valet
-  expect:
-    command: bash -c "valet install"
-    responses:
-      "Password:": "{{ ansible_become_password }}"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:~/.composer/vendor/bin"
-  when:
-    - php_extensions is changed
-    - (php|default({})).composer_packages|join(" ") is search('laravel/valet')
+- name: Ensure composer global binaries are in PATH
+  lineinfile:
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    line: 'export PATH="$HOME/.composer/vendor/bin:$PATH"'
+    state: present
+  when: composer_packages is changed

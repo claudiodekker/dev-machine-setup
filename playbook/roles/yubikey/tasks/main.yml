@@ -4,7 +4,7 @@
     name: "{{ item }}"
     state: latest
   with_items:
-    - yubikey-personalization
+    - ykpers
     - ykman
   register: yubikey_packages
 

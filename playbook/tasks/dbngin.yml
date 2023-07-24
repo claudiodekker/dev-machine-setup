@@ -1,0 +1,31 @@
+---
+- name: Install DBngin
+  homebrew_cask:
+    name: 'dbngin'
+    state: latest
+
+- name: Get MySQL version directories
+  command: ls -1 /Users/Shared/DBngin/mysql/
+  register: mysql_versions
+  changed_when: false
+  ignore_errors: true
+
+- block:
+    - name: Set MySQL version fact
+      set_fact:
+        mysql_version: "{{ mysql_versions.stdout_lines | last }}"
+
+    - name: Ensure the MySQL client is part of our path
+      ansible.builtin.lineinfile:
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+        line: 'export PATH="/Users/Shared/DBngin/mysql/{{ mysql_version }}/bin:$PATH"'
+        state: present
+  when: mysql_versions.rc == 0
+
+- block:
+    - name: Ensure the MySQL client is not part of our path
+      ansible.builtin.lineinfile:
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+        regexp: '^export PATH="/Users/Shared/DBngin/mysql'
+        state: absent
+  when: mysql_versions.rc != 0

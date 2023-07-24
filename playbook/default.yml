@@ -83,7 +83,6 @@
 
     composer:
       - "laravel/pint ^1.5"
-      - "tightenco/takeout ^2.3"
 
     terminal:
       theme: Pro
@@ -106,6 +105,8 @@
     tags: macOS
   - include: tasks/mysql-client.yml
     tags: mysql-client
+  - include: tasks/dbngin.yml
+    tags: dbngin
   - include: tasks/nodejs.yml
     tags: nodejs
   - include: tasks/php.yml

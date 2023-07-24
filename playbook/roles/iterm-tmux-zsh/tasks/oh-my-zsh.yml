@@ -7,6 +7,7 @@
   copy:
     src: .zshrc
     dest: "{{ ansible_env.HOME }}/.zshrc"
+    force: false
   when: oh_my_zsh_installation is changed
 
 - name: Copy TayBalt ZSH theme

@@ -1,0 +1,5 @@
+- name: Gather facts about last Playbook run
+  import_tasks: last_ran.yml
+
+- name: Gather Homebrew Facts
+  import_tasks: homebrew.yml

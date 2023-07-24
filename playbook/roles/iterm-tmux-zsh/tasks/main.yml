@@ -4,6 +4,8 @@
 
 - name: Install tmux
   import_tasks: tmux.yml
+  when: ('tmux' not in brew_formulae_list) or (not last_ran_within_last_day|default(false))
 
 - name: Install iTerm
   import_tasks: iterm.yml
+  when: ('iterm2' not in brew_cask_list) or (not last_ran_within_last_day|default(false))

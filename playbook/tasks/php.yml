@@ -3,33 +3,7 @@
   homebrew_cask:
     name: 'herd'
     state: latest
-
-- name: Get list of non-Herd PHP versions and extensions
-  shell: "brew list --full-name | grep 'shivammathur'"
-  register: brew_list_output
-  changed_when: false
-  failed_when: false
-
-- name: Uninstall PHP versions and extensions
-  homebrew:
-    name: "{{ item }}"
-    state: absent
-  with_items: "{{ brew_list_output.stdout_lines }}"
-  register: non_herd_php_uninstalled
-
-- name: Uninstall non-Herd Composer
-  homebrew:
-    name: 'composer'
-    state: absent
-  register: composer_uninstalled
-  when: non_herd_php_uninstalled is changed
-
-- name: Uninstall global composer packages already bundled with Herd
-  ansible.builtin.command: composer global remove '{{ item }}'
-  with_items:
-    - laravel/valet
-    - laravel/installer
-  when: composer_uninstalled is changed
+  when: ('herd' not in brew_cask_list) or (not last_ran_within_last_day|default(false))
 
 - name: Install Global Composer Packages
   ansible.builtin.command: composer global require '{{ item }}' -W

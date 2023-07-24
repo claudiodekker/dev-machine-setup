@@ -1,0 +1,15 @@
+---
+- name: Check if marker file exists
+  stat:
+    path: "~/.dev_machine_ansible_last_ran_at"
+  register: marker_file
+
+- name: Set last_ran_within_last_day fact
+  set_fact:
+    last_ran_within_last_day: "{{ marker_file.stat.exists and ((ansible_date_time.epoch|default(0)|int - marker_file.stat.mtime|default(0)|int) < 86400) }}"
+
+- name: Touch marker file
+  file:
+    path: "~/.dev_machine_ansible_last_ran_at"
+    state: touch
+  changed_when: false

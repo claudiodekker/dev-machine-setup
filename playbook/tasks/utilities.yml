@@ -11,4 +11,4 @@
     name: '{{ item.name }}'
     state: '{{ "absent" if item.removed|default(false) else "latest" }}'
   with_items: "{{ utilities|default([]) }}"
-  when: item.name is defined
+  when: (item.name is defined) and ((item.name not in brew_formulae_list) or (not last_ran_within_last_day|default(false)))

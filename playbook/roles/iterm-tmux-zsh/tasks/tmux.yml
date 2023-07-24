@@ -2,7 +2,7 @@
 - name: Install tmux
   homebrew:
     name: 'tmux'
-    state: present
+    state: latest
   register: tmux_installation
 
 - name: Ensure our tmux configuration is present
@@ -15,5 +15,4 @@
 - name: Install 'reattach-to-user-namespace'
   homebrew:
     name: 'reattach-to-user-namespace'
-    state: present
-  when: tmux_configuration is changed
+    state: latest

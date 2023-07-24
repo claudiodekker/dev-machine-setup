@@ -92,6 +92,7 @@
       - .idea/
 
   roles:
+    - fact-gatherer
     - yubikey
     - iterm-tmux-zsh
 #    - sublime-text
@@ -105,7 +106,7 @@
     tags: macOS
   - include: tasks/mysql-client.yml
     tags: mysql-client
-  - include: tasks/dbngin.yml
+  - include: tasks/mysql-client.yml
     tags: dbngin
   - include: tasks/nodejs.yml
     tags: nodejs

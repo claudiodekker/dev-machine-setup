@@ -3,6 +3,7 @@
   homebrew_cask:
     name: 'dbngin'
     state: latest
+  when: ('dbngin' not in brew_cask_list) or (not last_ran_within_last_day|default(false))
 
 - name: Get MySQL version directories
   command: ls -1 /Users/Shared/DBngin/mysql/

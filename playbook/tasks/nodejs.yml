@@ -6,6 +6,7 @@
   with_items:
     - nodenv
     - node-build
+  when: (item not in brew_formulae_list) or (not last_ran_within_last_day|default(false))
   register: nodejs_installed
 
 - name: Add nodenv to our .zshrc

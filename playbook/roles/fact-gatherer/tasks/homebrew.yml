@@ -1,0 +1,14 @@
+---
+- name: Gather installed Homebrew formulae
+  command: brew list --formulae
+  register: brew_installed_formulae
+  changed_when: false
+
+- name: Gather installed Homebrew casks
+  command: brew list --cask
+  register: brew_cask_list
+  changed_when: false
+
+- set_fact:
+    brew_formulae_list: "{{ brew_installed_formulae.stdout_lines }}"
+    brew_cask_list: "{{ brew_cask_list.stdout_lines }}"

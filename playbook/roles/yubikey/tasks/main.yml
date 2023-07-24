@@ -7,6 +7,7 @@
     - ykpers
     - ykman
   register: yubikey_packages
+  when: (item not in brew_formulae_list) or (not last_ran_within_last_day|default(false))
 
 - name: Install Yubikey GPG Support Packages
   homebrew:

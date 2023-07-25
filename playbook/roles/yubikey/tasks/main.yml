@@ -7,7 +7,7 @@
     - ykpers
     - ykman
   register: yubikey_packages
-  when: (item not in brew_formulae_list) or (not last_ran_within_last_day|default(false))
+  when: (yubikey|default({})).gpgKey|default(false) and ((item not in brew_formulae_list) or (not last_ran_within_last_day|default(false)))
 
 - name: Install Yubikey GPG Support Packages
   homebrew:
@@ -17,7 +17,7 @@
     - gnupg
     - hopenpgp-tools
     - pinentry-mac
-  when: (yubikey|default({})).gpgKey|default(false) and yubikey_packages is changed
+  when: (yubikey|default({})).gpgKey|default(false) and ((item not in brew_formulae_list) or (not last_ran_within_last_day|default(false)))
   register: gpg_suite
 
 - name: Receive GPG Public Key from Keyserver

@@ -42,8 +42,8 @@
 #      - { id: 1384080005, name: Tweetbot }
 #      - { name: dash }
       - { name: 1password }
-      - { name: discord }
-      - { name: docker }
+#      - { name: discord }
+#      - { name: docker }
       - { name: fork }
       - { name: firefox }
       - { name: height }
@@ -104,10 +104,8 @@
     tags: git
   - include: tasks/macOS.yml
     tags: macOS
-  - include: tasks/mysql-client.yml
-    tags: mysql-client
-  - include: tasks/mysql-client.yml
-    tags: dbngin
+  - include: tasks/databases.yml
+    tags: databases
   - include: tasks/nodejs.yml
     tags: nodejs
   - include: tasks/php.yml

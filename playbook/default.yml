@@ -75,6 +75,7 @@
       autocorrect: false
       clearBottomRightHotCorner: true
       disableSearchManPageIndexInTerminalShortcut: true
+      disableMouseAcceleration: true
       dockRecentApps: false
       showAllFiles: true
       smartQuotes: false

@@ -47,6 +47,15 @@
   register: hot_corners_clear_bottom_right
   when: (macOS|default({})).clearBottomRightHotCorner|default(false)
 
+- name: Disable Mouse Acceleration
+  osx_defaults:
+    domain: .GlobalPreferences
+    key: com.apple.mouse.linear
+    type: float
+    value: 1
+    state: present
+  when: (macOS|default({})).disableMouseAcceleration|default(false)
+
 - name: Housekeeping for Recent Apps (Dock)
   command: "defaults write com.apple.dock recent-apps {}"
   when: (show_recents_toggled is changed) or (hot_corners_clear_bottom_right is changed)

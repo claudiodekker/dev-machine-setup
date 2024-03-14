@@ -80,8 +80,6 @@
       showAllFiles: true
       smartQuotes: false
 
-    nodejs: 18.12.0
-
     composer:
       - "laravel/pint ^1.5"
 

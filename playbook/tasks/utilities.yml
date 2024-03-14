@@ -10,5 +10,6 @@
   homebrew:
     name: '{{ item.name }}'
     state: '{{ "absent" if item.removed|default(false) else "latest" }}'
+    install_options: '{{ "zap" if item.remove|default(false) else "" }}'
   with_items: "{{ utilities|default([]) }}"
   when: (item.name is defined) and ((item.name not in brew_formulae_list) or (not last_ran_within_last_day|default(false)))

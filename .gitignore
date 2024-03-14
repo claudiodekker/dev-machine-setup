@@ -1,3 +1,5 @@
 /.idea
 playbook/*.retry
 /.vault_pw
+venv/
+

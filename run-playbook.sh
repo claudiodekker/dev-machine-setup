@@ -14,6 +14,14 @@ if [ -z "$ansible_become_password" ]; then
     exit 1
 fi
 
+# Check if the venv folder exists
+if [ ! -d "./venv" ]; then
+	brew install python3
+	python3 -m venv venv
+fi
+
+source ./venv/bin/activate
+
 if ! [ -x "$(command -v ansible-playbook)" ]; then
 	# Install Homebrew (if necessary)
 	if ! [ -x "$(command -v brew)" ]; then
@@ -24,9 +32,8 @@ if ! [ -x "$(command -v ansible-playbook)" ]; then
 	fi
 
 	# Install Ansible
-	brew install python3
-	pip3 install ansible
-	pip3 install pexpect
+	./venv/bin/pip3 install ansible
+	./venv/bin/pip3 install pexpect
 fi
 
 # Actually run the playbook

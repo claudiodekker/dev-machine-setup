@@ -99,21 +99,21 @@
 #    - sublime-text
 
   tasks:
-  - include: tasks/applications.yml
+  - include_tasks: tasks/applications.yml
     tags: applications
-  - include: tasks/git.yml
+  - include_tasks: tasks/git.yml
     tags: git
-  - include: tasks/macOS.yml
+  - include_tasks: tasks/macOS.yml
     tags: macOS
-  - include: tasks/mysql-client.yml
+  - include_tasks: tasks/mysql-client.yml
     tags: mysql-client
-  - include: tasks/mysql-client.yml
+  - include_tasks: tasks/dbngin.yml
     tags: dbngin
-  - include: tasks/nodejs.yml
+  - include_tasks: tasks/nodejs.yml
     tags: nodejs
-  - include: tasks/php.yml
+  - include_tasks: tasks/php.yml
     tags: php
-  - include: tasks/terminal.yml
+  - include_tasks: tasks/terminal.yml
     tags: terminal
-  - include: tasks/utilities.yml
+  - include_tasks: tasks/utilities.yml
     tags: utilities

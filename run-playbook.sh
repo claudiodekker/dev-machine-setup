@@ -1,6 +1,11 @@
 #!/bin/bash
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd)
 
+# Allow the user to determine the playbook through an environment variable
+if [ -z "${playbook}" ]; then
+  playbook="default"
+fi
+
 # Allow the user to pass in a password through an environment variable
 # when a password is not provided, prompt the user for it.
 if [ -z "${ansible_become_password}" ]; then
@@ -37,4 +42,4 @@ if ! [ -x "$(command -v ansible-playbook)" ]; then
 fi
 
 # Actually run the playbook
-ansible-playbook playbook/default.yml -i playbook/hosts.yml -e "ansible_become_password=${ansible_become_password}" $@
+ansible-playbook playbook/$playbook.yml -i playbook/hosts.yml -e "ansible_become_password=${ansible_become_password}" $@

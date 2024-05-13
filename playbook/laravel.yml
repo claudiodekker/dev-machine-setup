@@ -1,0 +1,83 @@
+---
+- hosts: localhost
+  handlers:
+    - name: Restart macOS Finder
+      command: killall Finder
+      listen: "restart finder"
+    - name: Restart macOS Dock
+      command: killall Dock
+      listen: "restart dock"
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+  vars:
+    yubikey:
+      gpgKey: "08FDB44B6D6320215D1EE8C13025FFE233CCC24B"
+      gpg: true
+      ssh: true
+
+    git:
+      fullName: "Claudio Dekker"
+      email: "claudio@laravel.com"
+      signingKey: "{{ yubikey.gpgKey }}"
+
+    # Applications that have an ID are AppStore apps, the names are just for display/identification.
+    # Applications that don't have an ID are Homebrew Casks. In this case, the names are the to-be-installed formulas.
+    applications:
+      - { id: 1497506650, name: Yubico Authenticator }
+      - { id: 747648890, name: Telegram }
+      - { id: 803453959, name: Slack }
+      - { name: 1password }
+      - { name: cleanshot }
+      - { name: firefox }
+      - { name: fork }
+      - { name: little-snitch }
+      - { name: obsidian }
+      - { name: phpstorm }
+      - { name: protonvpn }
+      - { name: sublime-text }
+      - { name: tableplus }
+      - { name: tuple }
+
+    utilities:
+      - { name: z }
+      - { name: zx }
+
+    macOS:
+      autocorrect: false
+      clearBottomRightHotCorner: true
+      disableSearchManPageIndexInTerminalShortcut: true
+      disableMouseAcceleration: true
+      dockRecentApps: false
+      showAllFiles: true
+      smartQuotes: false
+
+    composer:
+      - "laravel/pint ^1.15"
+
+    terminal:
+      theme: Pro
+
+    gitignore:
+      - .DS_Store
+      - .idea/
+
+  roles:
+    - fact-gatherer
+    - iterm-tmux-zsh
+    - yubikey
+#    - sublime-text
+
+  tasks:
+  - include_tasks: tasks/applications.yml
+    tags: applications
+  - include_tasks: tasks/git.yml
+    tags: git
+  - include_tasks: tasks/macOS.yml
+    tags: macOS
+  - include_tasks: tasks/php.yml
+    tags: php
+  - include_tasks: tasks/terminal.yml
+    tags: terminal
+  - include_tasks: tasks/utilities.yml
+    tags: utilities

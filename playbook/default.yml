@@ -24,41 +24,42 @@
     # Applications that have an ID are AppStore apps, the names are just for display/identification.
     # Applications that don't have an ID are Homebrew Casks. In this case, the names are the to-be-installed formulas.
     applications:
+      - { id: 1497506650, name: Yubico Authenticator }
+      - { id: 425424353, name: The Unarchiver }
+      - { id: 747648890, name: Telegram }
+      - { id: 803453959, name: Slack }
+#      - { id: 1063996724, name: Tyme 2 }
 #      - { id: 1091189122, name: Bear }
+#      - { id: 1176895641, name: Spark }
+#      - { id: 1191449274, name: ToothFairy }
 #      - { id: 1278508951, name: Trello }
 #      - { id: 1290358394, name: Cardhop }
+#      - { id: 1384080005, name: Tweetbot }
 #      - { id: 411643860, name: DaisyDisk }
-#      - { id: 975937182, name: Fantastical 2 }
+#      - { id: 507257563, name: Sip }
 #      - { id: 775737590, name: iA Writer }
 #      - { id: 880001334, name: Reeder }
-      - { id: 803453959, name: Slack }
-#      - { id: 507257563, name: Sip }
-#      - { id: 1176895641, name: Spark }
-      - { id: 747648890, name: Telegram }
-      - { id: 425424353, name: The Unarchiver }
-      - { id: 1497506650, name: Yubico Authenticator }
-#      - { id: 1191449274, name: ToothFairy }
-#      - { id: 1063996724, name: Tyme 2 }
-#      - { id: 1384080005, name: Tweetbot }
-#      - { name: dash }
+#      - { id: 975937182, name: Fantastical 2 }
       - { name: 1password }
-#      - { name: discord }
-#      - { name: docker }
-      - { name: fork }
+      - { name: cleanshot }
       - { name: firefox }
-      - { name: height }
-      - { name: helo }
-#      - { name: paw }
+      - { name: fork }
+      - { name: little-snitch }
       - { name: obsidian }
       - { name: phpstorm }
-      - { name: protonmail-bridge }
       - { name: protonvpn }
-#      - { name: rectangle }
       - { name: sublime-text }
       - { name: tableplus }
-      - { name: tinkerwell }
+      - { name: tuple }
+#      - { name: dash }
+#      - { name: discord }
+#      - { name: docker }
+#      - { name: paw }
+#      - { name: protonmail-bridge }
+#      - { name: rectangle }
+#      - { name: tinkerwell }
 #      - { name: transmit }
-      - { name: vlc }
+#      - { name: vlc }
 
     utilities:
       - { name: bat }
@@ -81,7 +82,7 @@
       smartQuotes: false
 
     composer:
-      - "laravel/pint ^1.5"
+      - "laravel/pint ^1.15"
 
     terminal:
       theme: Pro
@@ -92,9 +93,8 @@
 
   roles:
     - fact-gatherer
-    - yubikey
     - iterm-tmux-zsh
-#    - sublime-text
+    - yubikey
 
   tasks:
   - include_tasks: tasks/applications.yml
@@ -103,10 +103,6 @@
     tags: git
   - include_tasks: tasks/macOS.yml
     tags: macOS
-  - include_tasks: tasks/databases.yml
-    tags: databases
-  - include_tasks: tasks/nodejs.yml
-    tags: nodejs
   - include_tasks: tasks/php.yml
     tags: php
   - include_tasks: tasks/terminal.yml

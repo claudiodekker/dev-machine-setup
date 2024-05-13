@@ -1,6 +1,0 @@
----
-- include_tasks: tasks/nodejs/install.yml
-  when: nodejs|default(false)
-
-- include_tasks: tasks/nodejs/uninstall.yml
-  when: not nodejs|default(false)

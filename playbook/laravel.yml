@@ -32,10 +32,13 @@
       - { name: firefox }
       - { name: fork }
       - { name: little-snitch }
+      - { name: linear-linear }
       - { name: obsidian }
       - { name: phpstorm }
       - { name: protonvpn }
+      - { name: responsively }
       - { name: sublime-text }
+      - { name: "stripe/stripe-cli/stripe", cask: false }
       - { name: tableplus }
       - { name: tuple }
 

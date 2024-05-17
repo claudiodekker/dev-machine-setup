@@ -21,9 +21,16 @@
   changed_when: install_macos_applications.stderr.find(' is already installed') == -1
   when: (item.id is defined) and (item.name is defined) and (item.id|string not in mas_installed_apps.stdout_lines)
 
-- name: Ensure macOS Applications (Homebrew)
+- name: Ensure macOS Applications (Homebrew - Cask)
   homebrew_cask:
     name: '{{ item.name }}'
     state: 'latest'
   with_items: "{{ applications|default([]) }}"
-  when: (item.id is not defined) and (item.name is defined) and ((item.name not in brew_cask_list) or (not last_ran_within_last_day|default(false)))
+  when: (item.id is not defined) and (item.name is defined) and (item.cask|default(true)) and ((item.name not in brew_cask_list) or (not last_ran_within_last_day|default(false)))
+
+- name: Ensure macOS Applications (Homebrew - Regular)
+  homebrew:
+    name: '{{ item.name }}'
+    state: 'latest'
+  with_items: "{{ applications|default([]) }}"
+  when: (item.id is not defined) and (item.name is defined) and (not item.cask|default(true)) and ((item.name not in brew_cask_list) or (not last_ran_within_last_day|default(false)))

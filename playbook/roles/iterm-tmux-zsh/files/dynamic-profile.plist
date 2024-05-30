@@ -89,6 +89,8 @@
          "BM Growl":true,
          "Command":"\/bin\/zsh --login",
          "Description":"Default",
+         "Custom Locale" : "en_US.UTF-8",
+         "Set Local Environment Vars" : 0,
          "Mouse Reporting":true,
          "Screen":-1,
          "Selection Color":{

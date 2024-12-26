@@ -1,0 +1,8 @@
+---
+- name: Install Ghostty
+  import_tasks: install.yml
+  when: ('ghostty' not in brew_cask_list) or (not last_ran_within_last_day|default(false))
+
+- name: Configure tmux for Ghostty
+  import_tasks: tmux.yml
+  when: ((ghostty_installation is defined) and (ghostty_installation is changed)) or ('tmux' in brew_formulae_list)

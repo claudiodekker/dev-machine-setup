@@ -1,0 +1,8 @@
+---
+- name: Install iTerm2
+  import_tasks: install.yml
+  when: ('iterm2' not in brew_cask_list) or (not last_ran_within_last_day|default(false))
+
+- name: Configure tmux for iTerm2
+  import_tasks: tmux.yml
+  when: ((tmux_installation is defined) and (tmux_installation is changed)) or ('tmux' in brew_formulae_list)

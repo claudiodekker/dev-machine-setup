@@ -1,0 +1,38 @@
+---
+- name: Install iTerm
+  homebrew_cask:
+    name: 'iterm2'
+    state: latest
+  register: iterm_installation
+
+- name: Configure iTerm's global settings
+  osx_defaults:
+    domain: com.googlecode.iterm2
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  with_items:
+    - { key: "Default Bookmark Guid", type: string, value: "F62231AD-CD04-4968-B642-1D4D39F60D8B" } # Our dynamic profile's GUID
+    - { key: "TabStyle", type: integer, value: 1 } # Window border color (0 for light, 1 for black)
+    - { key: "AllowClipboardAccess", type: boolean, value: true } # Allow in-terminal apps to access the clipboard
+    - { key: "SUEnableAutomaticChecks", type: boolean, value: true } # Automatically check for updates
+    - { key: "OnlyWhenMoreTabs", type: boolean, value: false } # Confirmation when closing tabs (irrelevant with tmux)
+    - { key: "PromptOnQuit", type: boolean, value: false } # Confirmation on iTerm quit (irrelevant with tmux)
+    - { key: "WindowNumber", type: integer, value: 0 } # Show the current window number (irrelevant with tmux)
+    - { key: "JobName", type: boolean, value: false } # Show the current job name (irrelevant with tmux)
+  when: iterm_installation is changed
+
+- name: Ensure iTerm's "Dynamic Profiles" folder exists
+  file:
+    path: "{{ ansible_env.HOME }}/Library/Application Support/iTerm2/DynamicProfiles"
+    recurse: yes
+    state: directory
+  when: iterm_installation is changed
+
+- name: Ensure iTerm's "Dynamic Profile" is installed
+  copy:
+    src: dynamic-profile.plist
+    dest: "{{ ansible_env.HOME }}/Library/Application Support/iTerm2/DynamicProfiles/dynamic-profile.plist"
+  register: iterm_profile_configuration
+  when: iterm_installation is changed

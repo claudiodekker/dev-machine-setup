@@ -1,0 +1,20 @@
+---
+- name: Check if .zshrc exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.zshrc"
+  register: zshrc_file
+
+- name: Ensure tmux block is present in .zshrc
+  blockinfile:
+    state: '{{ "present" if (iterm2|default({})).tmux|default(false) else "absent" }}'
+    path: "{{ ansible_env.HOME }}/.zshrc"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK: tmux setup"
+    block: |
+      if which tmux 2>&1 >/dev/null; then
+          # Only run tmux within iTerm
+          if test -n "$TERM_PROGRAM" && [ "$TERM_PROGRAM" = 'iTerm.app' ]; then
+              # If not inside a tmux session, and if no session is started, start a new session
+              test -z "$TMUX" && (tmux attach -t base || tmux new -s base) && exit
+          fi
+      fi
+  when: zshrc_file.stat.exists

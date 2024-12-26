@@ -55,32 +55,37 @@
       showAllFiles: true
       smartQuotes: false
 
-    composer:
-      - "laravel/pint ^1.15"
-
     terminal:
       theme: Pro
-
+    
+    ghostty:
+      tmux: true
+      
     gitignore:
       - .DS_Store
       - .idea/
 
+    composer:
+      - "laravel/pint ^1.19"
+
   roles:
     - fact-gatherer
-    - iterm-tmux-zsh
+    - fonts
+    - tmux
+    - ghostty
+    - oh-my-zsh
     - yubikey
-#    - sublime-text
 
   tasks:
-  - include_tasks: tasks/applications.yml
-    tags: applications
-  - include_tasks: tasks/git.yml
-    tags: git
-  - include_tasks: tasks/macOS.yml
-    tags: macOS
-  - include_tasks: tasks/php.yml
-    tags: php
-  - include_tasks: tasks/terminal.yml
-    tags: terminal
-  - include_tasks: tasks/utilities.yml
-    tags: utilities
+    - include_tasks: tasks/applications.yml
+      tags: applications
+    - include_tasks: tasks/git.yml
+      tags: git
+    - include_tasks: tasks/macOS.yml
+      tags: macOS
+    - include_tasks: tasks/php.yml
+      tags: php
+    - include_tasks: tasks/terminal.yml
+      tags: terminal
+    - include_tasks: tasks/utilities.yml
+      tags: utilities

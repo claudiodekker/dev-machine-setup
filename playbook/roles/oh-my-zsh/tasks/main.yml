@@ -1,0 +1,4 @@
+---
+- name: Install oh-my-zsh
+  import_tasks: install.yml
+  when: not last_ran_within_last_day|default(false)

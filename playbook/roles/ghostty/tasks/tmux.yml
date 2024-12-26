@@ -1,0 +1,10 @@
+---
+- name: Ensure tmux block is present in Ghostty config
+  blockinfile:
+    state: '{{ "present" if (ghostty|default({})).tmux|default(false) else "absent" }}'
+    path: "{{ ansible_env.HOME }}/Library/Application Support/com.mitchellh.ghostty/config"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - tmux setup"
+    block: |
+      command = /bin/zsh -c "tmux new-session -As base"
+      title = " "
+      confirm-close-surface = false

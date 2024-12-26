@@ -1,0 +1,15 @@
+---
+- name: Gather all specified fonts
+  find:
+    paths: "{{ role_path }}/files"
+    patterns: "{{ item }}*.ttf"
+  register: found_fonts
+  with_items: "{{ (macOS|default({})).fonts|default([]) }}"
+  when: not last_ran_within_last_day|default(false)
+
+- name: Ensure all specified fonts are installed
+  copy:
+    src: "{{ item.path }}"
+    dest: "{{ ansible_env.HOME }}/Library/Fonts"
+  with_items: "{{ found_fonts.results | map(attribute='files') | flatten(levels=1) }}"
+  when: found_fonts.skipped is not defined

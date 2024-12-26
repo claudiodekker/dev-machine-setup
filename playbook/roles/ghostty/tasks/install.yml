@@ -1,0 +1,11 @@
+---
+- name: Install Ghostty
+  homebrew_cask:
+    name: 'ghostty'
+    state: latest
+  register: ghostty_installation
+
+- name: Configure Ghostty 
+  copy:
+    src: config
+    dest: "{{ ansible_env.HOME }}/Library/Application Support/com.mitchellh.ghostty/"

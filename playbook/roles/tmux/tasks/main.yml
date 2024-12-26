@@ -1,0 +1,4 @@
+---
+- name: Install tmux
+  import_tasks: install.yml
+  when: ('tmux' not in brew_formulae_list) or (not last_ran_within_last_day|default(false))

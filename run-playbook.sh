@@ -19,6 +19,14 @@ if [ -z "$ansible_become_password" ]; then
     exit 1
 fi
 
+# Install Homebrew (if necessary)
+if ! [ -x "$(command -v brew)" ]; then
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    brew update
+fi
+
 # Check if the venv folder exists
 if [ ! -d "./venv" ]; then
 	brew install python3
@@ -28,14 +36,6 @@ fi
 source ./venv/bin/activate
 
 if ! [ -x "$(command -v ansible-playbook)" ]; then
-	# Install Homebrew (if necessary)
-	if ! [ -x "$(command -v brew)" ]; then
-	    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-	    eval "$(/opt/homebrew/bin/brew shellenv)"
-	    brew update
-	fi
-
 	# Install Ansible
 	./venv/bin/pip3 install ansible
 	./venv/bin/pip3 install pexpect

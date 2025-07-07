@@ -69,9 +69,19 @@
   failed_when: (command_shift_a_builtin.rc == 1) and ('"No value at that key path or invalid key path" not in command_shift_a_builtin.stdout')
 
 - name: Disable macOS CMD+Shift+A "Search man Page Index in Terminal" built-in
-  command: "plutil -replace NSServicesStatus -json \"{ \\\"com.apple.Terminal - Search man Page Index in Terminal - searchManPages\\\": { \\\"enabled_context_menu\\\": 0, \\\"enabled_services_menu\\\": 0, \\\"presentation_modes\\\": { \\\"ContextMenu\\\": 0, \\\"ServicesMenu\\\": 0 } } }\" {{ ansible_env.HOME }}/Library/Preferences/pbs.plist"
+  command: >
+    defaults write pbs NSServicesStatus '{
+      "com.apple.Terminal - Search man Page Index in Terminal - searchManPages" = {
+        "enabled_context_menu" = 1;
+        "enabled_services_menu" = 1;
+        "presentation_modes" = {
+          ContextMenu = 1;
+          ServicesMenu = 1;
+        };
+      };
+    }'
   when: ("searchManPages" not in command_shift_a_builtin.stdout) and (macOS|default({})).disableSearchManPageIndexInTerminalShortcut|default(false)
 
 - name: Re-enable macOS CMD+Shift+A "Search man Page Index in Terminal" built-in
-  command: "plutil -replace NSServicesStatus -json \"{ }\" {{ ansible_env.HOME }}/Library/Preferences/pbs.plist"
+  command: defaults write pbs NSServicesStatus '{}'
   when: ("searchManPages" in command_shift_a_builtin.stdout) and ((macOS|default({})).disableSearchManPageIndexInTerminalShortcut is defined) and not macOS.disableSearchManPageIndexInTerminalShortcut
